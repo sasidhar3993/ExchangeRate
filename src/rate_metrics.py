@@ -1,24 +1,26 @@
-import argparse
+import os
 import sys
-
+import yaml
 import pandas as pd
-from datetime import datetime, timedelta
 
+from datetime import datetime, timedelta
 from exchangerate_api import BaseAPI
 
 
-def get_30d_data(conf_path):
+def get_data(props):
     yesterday = datetime.now().date() - timedelta(days=1)
-   
-    last_30data = []
-   # Generate a list of the last 30 days
-    last_30_days = [(yesterday - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(2)]
-    for dt in last_30_days:
-        api = BaseAPI('HISTORICAL_API',conf_path, dt)
-        data = api.get_hist()
-        last_30data.append(data)
+    days = props['HISTORICAL_API']['DAYS']
 
-    return last_30data
+    hist_data = []
+
+   # Generate a list of the last input days given
+    last_input_days = [(yesterday - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(int(days))]
+    for dt in last_input_days:
+        api = BaseAPI('HISTORICAL_API', props, dt)
+        data = api.get_hist()
+        hist_data.append(data)
+
+    return hist_data
 
 
 def transform_data(data):
@@ -39,7 +41,13 @@ def main():
     conf_path = sys.argv[1]
     print(conf_path)
 
-    data = get_30d_data(conf_path)
+    props = {}
+    with open(os.path.join(conf_path, 'properties.yaml'), 'r') as con:
+        props = yaml.safe_load(con)
+
+    props['conf_path'] = conf_path
+
+    data = get_data(props)
     df = transform_data(data)
 
     # Best conversion rate
@@ -63,5 +71,5 @@ def main():
 
 
 # # Main function call
-# if __name__ == "main":
-main()
+if __name__ == "__main__":
+    main()

@@ -5,23 +5,28 @@ This script retrieves historical exchange rate data between AUD (Australian Doll
 ## Prerequisites
 - Python 3.x
 - Pandas
+- requests
+- pyYAML
 
 ## Installation
 1. Clone or download the repository.
-2. Install the required dependencies using pip: Pandas
+2. Install the required dependencies using pip: Pandas, PyYaml, requests
 3. Alternatively you can run this code from Juypter note book or Jupyterlab in git hub codespaces
 
 
 ## Usage
 1. `conf/confi.ini` file is store base url of exchange rates api and access key(use your own access key if required)
 
-![alt text](data/images/image.png)
+![alt text](data/images/ini.png)
 
 2. `conf/properties.yaml` is to segregate different api call based on latest , historical , timeseries and takes api id 
 
-![alt text](data/images/image-1.png)
+![alt text](data/images/prop.png)
 
-3. Run the script `src/rate_mertics.py`.(Main function currently confgiured to run only historical fetches) 
+3. Run the script `rate_mertics.py path_to_config`.(Main function currently configured to run only historical fetches) 
+   Takes one argument config path(Not a named argument)
+  ![alt text](data/images/run.png)
+
 4. The script will:
   - Fetch historical exchange rate data for the last 30 days.
   - Analyze the data to find:
@@ -48,5 +53,4 @@ python rate_metrics.py
 
 
 ## Output
-![alt text](data/images/image-2.png)
-
+![alt text](data/images/output.png)
