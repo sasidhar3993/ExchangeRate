@@ -1,23 +1,25 @@
+import argparse
+import sys
+
 import pandas as pd
-import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
 
 from exchangerate_api import BaseAPI
 
 
-
-def get_30d_data():
+def get_30d_data(conf_path):
     yesterday = datetime.now().date() - timedelta(days=1)
    
     last_30data = []
    # Generate a list of the last 30 days
-    last_30_days = [(yesterday  - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(30)]
+    last_30_days = [(yesterday - timedelta(days=x)).strftime("%Y-%m-%d") for x in range(2)]
     for dt in last_30_days:
-        api = BaseAPI('HISTORICAL_API', dt)
+        api = BaseAPI('HISTORICAL_API',conf_path, dt)
         data = api.get_hist()
         last_30data.append(data)
 
     return last_30data
+
 
 def transform_data(data):
     df = pd.DataFrame(data)
@@ -34,7 +36,10 @@ def transform_data(data):
 
 def main():
 
-    data = get_30d_data ()
+    conf_path = sys.argv[1]
+    print(conf_path)
+
+    data = get_30d_data(conf_path)
     df = transform_data(data)
 
     # Best conversion rate
@@ -42,14 +47,14 @@ def main():
     best_date = df.loc[best_ratio_index, 'date']
     best_ratio = df.loc[best_ratio_index, 'aud_to_nzd']
     best_ratio_rounded = round(best_ratio, 5)
-    print(f"Best conversion ratio is ::{best_ratio_rounded} on date :: {best_date}")
+    print(f"Best conversion ratio is :: {best_ratio_rounded} on date :: {best_date}")
 
     # Worst conversion rate
     min_ratio_index = df['aud_to_nzd'].idxmin()
     min_date = df.loc[min_ratio_index, 'date']
     min_ratio = df.loc[min_ratio_index, 'aud_to_nzd']
     min_ratio_rounded = round(min_ratio, 5)
-    print(f"Worst conversion ratio is ::{min_ratio_rounded} on date :: {min_date}")
+    print(f"Worst conversion ratio is :: {min_ratio_rounded} on date :: {min_date}")
 
     # Average rate
     average_ratio = df['aud_to_nzd'].mean()
@@ -57,7 +62,6 @@ def main():
     print("Average AUD to NZD Ratio:", avg_ratio_rounded)
 
 
-
-
-# Main fucntion call
+# # Main function call
+# if __name__ == "main":
 main()

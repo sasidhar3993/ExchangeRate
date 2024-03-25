@@ -6,14 +6,14 @@ import configparser
 
 class BaseAPI:
 
-    def __init__(self, api_id, hist_date=None, start_date=None, end_date=None) -> None:
+    def __init__(self, api_id, conf_path, hist_date=None, start_date=None, end_date=None) -> None:
         
         props = {}
-        with open(os.path.dirname(__file__) + '/properties.yaml', 'r') as con:
+        with open(os.path.join(conf_path, 'properties.yaml'), 'r') as con:
              props = yaml.safe_load(con)
 
         conf = configparser.ConfigParser()
-        conf.read(os.path.dirname(__file__) + '/conf.ini')
+        conf.read(os.path.join(conf_path, 'conf.ini'))
         self.url = conf.get('CONFIG', 'BASE_URL')
         self.access_key = conf.get('CONFIG', 'API_KEY')
         self.api_id = api_id
