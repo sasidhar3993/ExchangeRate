@@ -15,7 +15,7 @@ This script retrieves historical exchange rate data between AUD (Australian Doll
 ## Usage
 1. `confi.ini` file is store base url of exchange rates api and access key(use your own access key if required)
 
-![alt text](image.png)
+![alt text](data/images/image.png)
 
 2. `properties.yaml` is to segregate different api call based on latest , historical , timeseries and takes api id 
 
